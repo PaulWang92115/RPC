@@ -1,0 +1,94 @@
+<xsd:schema
+        xmlns="http://paul.com/schema"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://paul.com/schema">
+    <xsd:complexType name="procotol-type">
+        <xsd:attribute name="procotol" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 name. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="port" type="xsd:int">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 age. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="procotol" type="procotol-type">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ elementname1的文档 ]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="application-type">
+        <xsd:attribute name="name" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 name. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="application" type="application-type">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ elementname1的文档 ]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="service-type">
+        <xsd:attribute name="interfaces" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 name. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="ref" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 name. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="timeout" type="xsd:int">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 age. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="service" type="service-type">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ elementname1的文档 ]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="role-type">
+        <xsd:attribute name="role" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 name. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="role" type="role-type">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ elementname1的文档 ]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="provider-type">
+        <xsd:attribute name="interf" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 name. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="impl" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ The elementname1 name. ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="provider" type="provider-type">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ elementname1的文档 ]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:schema>

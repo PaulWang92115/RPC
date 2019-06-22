@@ -19,15 +19,13 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter{
     @Override
     public synchronized void channelRead(ChannelHandlerContext ctx, Object msg)
             throws Exception {
-        String res = (String)msg;
-//        RpcResponse rpcResponse = (RpcResponse)msg;
-//        String responseId = rpcResponse.getResponseId();
-        System.out.println("123:"+res);
-        String responseId = "123";
+       // String res = (String)msg;
+        RpcResponse rpcResponse = (RpcResponse)msg;
+        String responseId = rpcResponse.getResponseId();
         MessageCallBack callBack = mapCallBack.get(responseId);
         if(callBack != null){
         	mapCallBack.remove(responseId);
-//        	callBack.over(rpcResponse);
+        	callBack.over(rpcResponse);
         }
 
     }

@@ -1,6 +1,8 @@
 package com.paul.framework;
 
-public class RpcResponse {
+import java.io.Serializable;
+
+public class RpcResponse implements Serializable {
 	
 	private String responseId;
 	

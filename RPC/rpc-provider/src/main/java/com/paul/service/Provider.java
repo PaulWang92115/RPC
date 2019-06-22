@@ -12,6 +12,10 @@ import com.paul.procotol.dubbo.DubboProcotol;
 import com.paul.procotol.http.HttpProcotol;
 import com.paul.procotol.http.HttpServer;
 import com.paul.register.Register;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -22,14 +26,17 @@ public class Provider implements ApplicationContextAware{
 	
 	private ApplicationContext ctx;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException {
 		//注册服务
-		URL url = new URL("localhost", 8080);
-		Register.regist(url,HelloService.class.getName(),HelloServiceImpl.class.getName());
+//		InetAddress addr = InetAddress.getLocalHost();
+//		String ip = addr.getHostAddress();
+//		URL url = new URL(ip, 3230);
+//		Register.regist(url,HelloService.class.getName(),HelloServiceImpl.class.getName());
 
 		//启动 Tomcat
-		Procotol procotol1 = new DubboProcotol();
-		procotol1.start(url);
+//		Procotol procotol1 = new DubboProcotol();
+//		procotol1.start(url);
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("rpc.xml");
 	}
 
 	@Override

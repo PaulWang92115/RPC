@@ -14,6 +14,7 @@
         <module>rpc-register</module>
         <module>rpc-protocol</module>
         <module>rpc-framework</module>
+        <module>rpc-spring</module>
     </modules>
 
 

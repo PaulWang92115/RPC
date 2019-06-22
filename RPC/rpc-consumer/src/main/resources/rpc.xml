@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rpc="http://paul.com/schema" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://paul.com/schema http://paul.com/schema/rpc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <rpc:procotol procotol="Dubbo" port="3230"/>
+    <rpc:application name="rpc-client" />
+    <rpc:service interfaces="com.paul.service.HelloService" ref="helloService" timeout="5000"/>
+</beans>

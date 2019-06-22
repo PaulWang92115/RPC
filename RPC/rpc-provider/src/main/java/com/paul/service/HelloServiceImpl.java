@@ -5,4 +5,9 @@ public class HelloServiceImpl implements HelloService {
     public String sayHello(String name) {
         return "Hello " + name;
     }
+
+    @Override
+    public int cal(int a, int b) {
+        return a + b;
+    }
 }
