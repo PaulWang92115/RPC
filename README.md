@@ -16,6 +16,7 @@
 2. 增加对象序列化机制，目前只有原生的序列化机制。
 3. netty 并发优化。
 4. 多线程模型优化。
+5. 监控模块。
 
 ### RPC introduction
 1. RPC is written in Java, and network communication depends on netty, http, socket.
@@ -29,6 +30,7 @@ In development:
 2. Increasing the object serialization mechanism, currently only the native serialization mechanism.
 3.netty concurrency optimization.
 4. Multi-threaded model optimization.
+5. Registration module
 
 ### 结构图
 ![avatar](https://github.com/PaulWang92115/RPC/blob/master/doc/RPC%20(1).png)
