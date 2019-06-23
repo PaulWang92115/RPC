@@ -30,4 +30,5 @@ In development:
 4. Multi-threaded model optimization.
 
 结构图：
-https://github.com/PaulWang92115/RPC/blob/master/doc/RPC%20(1).png
+![avatar](http://baidu.com/pic/doge.png)
+
