@@ -28,3 +28,6 @@ In development:
 2. Increasing the object serialization mechanism, currently only the native serialization mechanism.
 3.netty concurrency optimization.
 4. Multi-threaded model optimization.
+
+结构图：
+https://github.com/PaulWang92115/RPC/blob/master/doc/RPC%20(1).png
