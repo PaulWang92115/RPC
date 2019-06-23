@@ -17,6 +17,7 @@
 3. netty 并发优化。
 4. 多线程模型优化。
 5. 监控模块。
+6. 客户端连接关闭。
 
 ### RPC introduction
 1. RPC is written in Java, and network communication depends on netty, http, socket.
