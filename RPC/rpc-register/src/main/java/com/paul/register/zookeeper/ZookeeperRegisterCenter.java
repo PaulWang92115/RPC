@@ -1,14 +1,18 @@
 package com.paul.register.zookeeper;
 
+import com.paul.framework.ServiceConsumer;
+import com.paul.framework.ServiceProvider;
 import com.paul.register.RegisterCenter4Consumer;
 import com.paul.register.RegisterCenter4Provider;
-import com.sun.deploy.util.StringUtils;
+
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
+import org.apache.zookeeper.common.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,10 +27,10 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
         return registerCenter;
     }
     //服务提供者列表，key：服务提供者接口，value：服务提供者服务方法列表
-    private static final Map<String,List<ProviderService>> providerServiceMap = new ConcurrentHashMap<>();
+    private static final Map<String,List<ServiceProvider>> providerServiceMap = new ConcurrentHashMap<>();
 
     //服务端 zookeeper 元信息，选择服务（第一次从zookeeper 拉取，后续由zookeeper监听机制主动更新）
-    private static final Map<String,List<ProviderService>> serviceData4Consumer = new ConcurrentHashMap<>();
+    private static final Map<String,List<ServiceProvider>> serviceData4Consumer = new ConcurrentHashMap<>();
 
     //从配置文件中获取 zookeeper 服务地址列表
     private static String  ZK_SERIVCE;
@@ -44,20 +48,20 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
     private static volatile ZkClient zkClient = null;
 
     @Override
-    public void initProviderMap() {
-        if(MapUtils.isEmpty(serviceData4Consumer)){
-            serviceData4Consumer.putAll(fetchOrUpdateServiceMetaData());
+    public void initProviderMap(String remoteAppKey, String groupName) {
+        if(serviceData4Consumer.isEmpty()){
+            serviceData4Consumer.putAll(fetchOrUpdateServiceMetaData(remoteAppKey,groupName));
         }
 
     }
 
     @Override
-    public Map<String, List<ProviderService>> getServiceMetaDataMap4Consumer() {
+    public Map<String, List<ServiceProvider>> getServiceMetaDataMap4Consumer() {
         return serviceData4Consumer;
     }
 
     @Override
-    public void registerConsumer(ConsumerService consumer) {
+    public void registerConsumer(ServiceConsumer consumer) {
         if(consumer == null){
             return;
         }
@@ -79,7 +83,7 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
             }
 
             //创建服务消费者节点
-            String serviceNode = consumer.getServiceItf.getName();
+            String serviceNode = consumer.getConsumer().getName();
             String servicePath = ROOT_PATH + "/" + serviceNode + CONSUMER_TYPE;
 
             exist = zkClient.exists(servicePath);
@@ -88,7 +92,7 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
             }
 
             //创建当前服务器节点
-            String ip = ""；
+            String ip = "";
             String currentServiceIpNode = servicePath + "/" + ip;
             exist = zkClient.exists(currentServiceIpNode);
             if(!exist){
@@ -101,17 +105,19 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
     }
 
     @Override
-    public void registerProvider(List<ProviderSerivce> serivceList) {
-        if(serivceList.size() == 0){
+    public void registerProvider(List<ServiceProvider> serivceList) {
+        if(serivceList == null || serivceList.size() == 0){
             return;
         }
-        //连接 zookeeper，注册服务,加锁
+        
+        //连接 zookeeper，注册服务,加锁，将所有需要注册的服务放到providerServiceMap里面
         synchronized (ZookeeperRegisterCenter.class){
-            //考虑新增节点的情况
-            for(ProviderServicee provider:serivceList){
-                String serviceItfKey = provider.getServiceItf.getName();
-                List<ProviderServicee> providers = providerServiceMap.get(serviceItfKey);
-                if(providers = null){
+            for(ServiceProvider provider:serivceList){
+            	//获取接口名称
+                String serviceItfKey = provider.getProvider().getName();
+                //先从当前服务提供者的集合里面获取
+                List<ServiceProvider> providers = providerServiceMap.get(serviceItfKey);
+                if(providers == null){
                     providers = new ArrayList<>();
                 }
                 providers.add(provider);
@@ -134,7 +140,7 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
                 zkClient.createPersistent(ROOT_PATH);
             }
 
-            for(Map.Entry<String,List<ProviderServicee>> entry:providerServiceMap.entrySet()){
+            for(Map.Entry<String,List<ServiceProvider>> entry:providerServiceMap.entrySet()){
                 //创建服务提供者节点
                 String serviceNode = entry.getKey();
                 String servicePath = ROOT_PATH + "/" + serviceNode + PROVIDER_TYPE;
@@ -143,8 +149,8 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
                     zkClient.createPersistent(servicePath,true);
                 }
 
-                //创建当前服务器节点
-                int serverPort = entry.getValue().get(0).getServerPort();
+                //创建当前服务器节点，这里是注册时使用，一个接口对应的ServiceProvider 只有一个 
+                int serverPort = entry.getValue().get(0).getPort();
                 String ip = "";
                 String serviceIpNode = servicePath + ip + "|" + serverPort;
                 exist = zkClient.exists(serviceIpNode);
@@ -160,12 +166,11 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
                             list = new ArrayList<>();
                         }
                         //存活的服务 IP 列表
-                        List<String> activeServiceIpList = Lists.newArrayList(Lists.transform(list, new Function<String,String>(){
-                            @Override
-                            public String apply(String input){
-                                return StringUtils.split(input,"|")[0];
-                            }
-                        }));
+                        List<String> activeServiceIpList = new ArrayList<>();
+                        for(String input:list){
+                        	String ip = StringUtils.split(input, "|").get(0);
+                        	activeServiceIpList.add(ip);
+                        }
                         refreshActivityService(activeServiceIpList);
                     }
                 });
@@ -175,8 +180,135 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
 
     }
 
+    /**
+     * 
+     * 在某个服务端获取自己暴露的服务
+     */
     @Override
-    public Map<String, List<ProviderSerivce>> getProviderService() {
+    public Map<String, List<ServiceProvider>> getProviderService() {
         return providerServiceMap;
     }
+    
+    
+    //利用ZK自动刷新当前存活的服务提供者列表数据
+    private void refreshActivityService(List<String> serviceIpList) {
+        if (serviceIpList == null||serviceIpList.isEmpty()) {
+            serviceIpList = new ArrayList<>();
+        }
+
+        Map<String, List<ServiceProvider>> currentServiceMetaDataMap = new HashMap<>();
+        for (Map.Entry<String, List<ServiceProvider>> entry : providerServiceMap.entrySet()) {
+            String key = entry.getKey();
+            List<ServiceProvider> providerServices = entry.getValue();
+
+            List<ServiceProvider> serviceMetaDataModelList = currentServiceMetaDataMap.get(key);
+            if (serviceMetaDataModelList == null) {
+                serviceMetaDataModelList = new ArrayList<>();
+            }
+
+            for (ServiceProvider serviceMetaData : providerServices) {
+                if (serviceIpList.contains(serviceMetaData.getIp())) {
+                    serviceMetaDataModelList.add(serviceMetaData);
+                }
+            }
+            currentServiceMetaDataMap.put(key, serviceMetaDataModelList);
+        }
+        providerServiceMap.clear();
+        providerServiceMap.putAll(currentServiceMetaDataMap);
+    }
+
+
+    private void refreshServiceMetaDataMap(List<String> serviceIpList) {
+        if (serviceIpList == null) {
+            serviceIpList = new ArrayList<>();
+        }
+
+        Map<String, List<ServiceProvider>> currentServiceMetaDataMap = new HashMap<>();
+        for (Map.Entry<String, List<ServiceProvider>> entry : serviceData4Consumer.entrySet()) {
+            String serviceItfKey = entry.getKey();
+            List<ServiceProvider> serviceList = entry.getValue();
+
+            List<ServiceProvider> providerServiceList = currentServiceMetaDataMap.get(serviceItfKey);
+            if (providerServiceList == null) {
+                providerServiceList = new ArrayList<>();
+            }
+
+            for (ServiceProvider serviceMetaData : serviceList) {
+                if (serviceIpList.contains(serviceMetaData.getIp())) {
+                    providerServiceList.add(serviceMetaData);
+                }
+            }
+            currentServiceMetaDataMap.put(serviceItfKey, providerServiceList);
+        }
+
+        serviceData4Consumer.clear();
+        serviceData4Consumer.putAll(currentServiceMetaDataMap);
+    }
+
+
+    private Map<String, List<ServiceProvider>> fetchOrUpdateServiceMetaData(String remoteAppKey, String groupName) {
+        final Map<String, List<ServiceProvider>> providerServiceMap = new ConcurrentHashMap<>();
+        //连接zk
+        synchronized (ZookeeperRegisterCenter.class) {
+            if (zkClient == null) {
+                zkClient = new ZkClient(ZK_SERIVCE, ZK_SESSION_TIME_OUT, ZK_CONNECTION_TIME_OUT, new SerializableSerializer());
+            }
+        }
+
+        //从ZK获取服务提供者列表
+        String providePath = ROOT_PATH + "/" + remoteAppKey + "/" + groupName;
+        List<String> providerServices = zkClient.getChildren(providePath);
+
+        for (String serviceName : providerServices) {
+            String servicePath = providePath + "/" + serviceName + "/" + PROVIDER_TYPE;
+            List<String> ipPathList = zkClient.getChildren(servicePath);
+            for (String ipPath : ipPathList) {
+                String serverIp = StringUtils.split(ipPath, "|").get(0);
+                String serverPort = StringUtils.split(ipPath, "|").get(1);
+                int weight = Integer.parseInt(StringUtils.split(ipPath, "|").get(2));
+                int workerThreads = Integer.parseInt(StringUtils.split(ipPath, "|").get(3));
+                String group = StringUtils.split(ipPath, "|").get(4);
+
+                List<ServiceProvider> providerServiceList = providerServiceMap.get(serviceName);
+                if (providerServiceList == null) {
+                    providerServiceList = new ArrayList<>();
+                }
+                ServiceProvider providerService = new ServiceProvider();
+
+                try {
+                	Class clazz = Class.forName(serviceName);
+                    providerService.setProvider(clazz);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+
+                providerService.setIp(serverIp);
+                providerService.setPort(Integer.parseInt(serverPort));
+                providerService.setWeight(weight);
+                providerService.setWorkerThreads(workerThreads);
+                providerService.setGroupName(group);
+                providerServiceList.add(providerService);
+
+                providerServiceMap.put(serviceName, providerServiceList);
+            }
+
+            //监听注册服务的变化,同时更新数据到本地缓存
+            zkClient.subscribeChildChanges(servicePath, new IZkChildListener() {
+                @Override
+                public void handleChildChange(String parentPath, List<String> currentChilds) throws Exception {
+                    if (currentChilds == null) {
+                        currentChilds = new ArrayList<>();
+                    }
+                    List<String> activeServiceIpList = new ArrayList<>();
+                    for(String input:currentChilds){
+                    	String ip = StringUtils.split(input, "|").get(0);
+                    	activeServiceIpList.add(ip);
+                    }
+                    refreshServiceMetaDataMap(activeServiceIpList);
+                }
+            });
+        }
+        return providerServiceMap;
+    }
+
 }

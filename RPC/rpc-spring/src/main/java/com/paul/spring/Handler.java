@@ -43,7 +43,8 @@ public class Handler<T> implements InvocationHandler{
 
         URL url = Register.random(interfaceClass.getName());
         String impl = Register.get(url,interfaceClass.getName());
-        RpcRequest invocation = new RpcRequest(UUID.randomUUID().toString(),interfaceClass.getName(),method.getName(),args, method.getParameterTypes(),impl);
+        int timeout = 20000;
+        RpcRequest invocation = new RpcRequest(UUID.randomUUID().toString(),interfaceClass.getName(),method.getName(),args, method.getParameterTypes(),impl,timeout);
         Object res = procotol.send(url, invocation);
         return res;
     }

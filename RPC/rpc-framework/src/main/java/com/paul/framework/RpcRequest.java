@@ -6,14 +6,15 @@ import java.io.Serializable;
 
 public class RpcRequest implements Serializable {
 	private String requestId;
-    private String interfaceName;
-    private String methodName;
-    private Object[] params;
-    private Class[] paramTypes;
-    private String impl;
-    
+	private String interfaceName;
+	private String methodName;
+	private Object[] params;
+	private Class[] paramTypes;
+	private String impl;
+	private int timeout;
+
 	public RpcRequest(String requestId, String interfaceName,
-			String methodName, Object[] params, Class[] paramTypes,String impl) {
+					  String methodName, Object[] params, Class[] paramTypes,String impl,int timeout) {
 		super();
 		this.requestId = requestId;
 		this.interfaceName = interfaceName;
@@ -21,6 +22,7 @@ public class RpcRequest implements Serializable {
 		this.params = params;
 		this.paramTypes = paramTypes;
 		this.impl = impl;
+		this.timeout = timeout;
 	}
 	public String getRequestId() {
 		return requestId;
@@ -60,4 +62,12 @@ public class RpcRequest implements Serializable {
 	public void setImpl(String impl) {
 		this.impl = impl;
 	}
+	public int getTimeout() {
+		return timeout;
+	}
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
+	}
+
+
 }

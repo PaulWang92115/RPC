@@ -37,8 +37,8 @@ public class MessageCallBack {
     public void over(RpcResponse reponse) {
         try {
             lock.lock();
-            finish.signal();
             this.rpcResponse = reponse;
+            finish.signal();
         } finally {
             lock.unlock();
         }

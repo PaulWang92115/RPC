@@ -8,6 +8,8 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import com.paul.procotol.dubbo.channelpool.NettyChannelPoolFactory;
+
 public class ServiceBeanDefinitionParser implements BeanDefinitionParser {
 
     private final Class<?> beanClass;
@@ -42,7 +44,7 @@ public class ServiceBeanDefinitionParser implements BeanDefinitionParser {
 
         BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
         beanDefinitionRegistry.registerBeanDefinition(ref,definition);
-
+        NettyChannelPoolFactory.getInstance().initNettyChannelPoolFactory();
         return definition;
     }
 }

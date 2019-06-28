@@ -76,6 +76,9 @@ public class NettyServer {
 		}catch(Exception e){
 			bossGroup.shutdownGracefully();
 			workerGroup.shutdownGracefully();
+		}finally {
+			bossGroup.shutdownGracefully();
+			workerGroup.shutdownGracefully();
 		}
 		
 	}
