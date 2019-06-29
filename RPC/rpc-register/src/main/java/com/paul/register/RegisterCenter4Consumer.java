@@ -11,7 +11,7 @@ public interface RegisterCenter4Consumer {
     /**
      * 消费端初始化服务提供者信息本地缓存
      */
-    public void initProviderMap(String remoteAppKey, String groupName);
+    public void initProviderMap();
 
     /**
      * 消费端获取服务提供者信息

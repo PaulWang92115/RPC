@@ -1,11 +1,13 @@
 package com.paul.spring;
 
 import com.paul.framework.Configuration;
+import com.paul.framework.ServiceProvider;
 import com.paul.procotol.Procotol;
 import com.paul.framework.URL;
 import com.paul.procotol.dubbo.DubboProcotol;
 import com.paul.procotol.http.HttpProcotol;
 import com.paul.procotol.socket.SocketProcotol;
+import com.paul.register.zookeeper.ZookeeperRegisterCenter;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerBeanDefinitionParser implements BeanDefinitionParser {
 
@@ -52,7 +56,7 @@ public class ServerBeanDefinitionParser implements BeanDefinitionParser {
                     port = 32115;
                 }
                 URL url = new URL(ip,port);
-       //         Register.regist(url,HelloService.class.getName(),HelloServiceImpl.class.getName());
+                //启动服务端
                 procotol.start(url);
 
             } catch (Exception e) {
@@ -62,4 +66,7 @@ public class ServerBeanDefinitionParser implements BeanDefinitionParser {
 
         return null;
     }
+
+
+
 }

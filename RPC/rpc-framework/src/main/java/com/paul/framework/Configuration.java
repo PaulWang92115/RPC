@@ -9,6 +9,7 @@ public class Configuration {
     private int port;
     private String role;
     private String serialize;
+    private String address;
 
     private static Configuration configuration = new Configuration();
 
@@ -56,5 +57,13 @@ public class Configuration {
 
     public void setSerialize(String serialize) {
         this.serialize = serialize;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
