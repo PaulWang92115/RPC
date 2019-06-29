@@ -1,12 +1,12 @@
 package com.paul.procotol.dubbo;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-import com.paul.framework.RpcRequest;
 
+import com.paul.framework.Configuration;
+import com.paul.framework.RpcResponse;
+import com.paul.serializer.NettyDecoderHandler;
+import com.paul.serializer.NettyEncoderHandler;
+import com.paul.serializer.SerializeType;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -20,17 +20,11 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.timeout.IdleStateHandler;
+
 
 public class NettyClient {
 
 	private static NettyClient INSTANCE = new NettyClient();
-
-	private final static int MESSAGE_LENGTH = 4;
 
 	private final static int parallel = Runtime.getRuntime().availableProcessors() * 2;
 
@@ -39,6 +33,8 @@ public class NettyClient {
 	public static NettyClient getInstance(){
 		return INSTANCE;
 	}
+
+	private SerializeType serializeType = SerializeType.queryByType(Configuration.getInstance().getSerialize());
 
 	public void start(String host,Integer port){
 
@@ -55,12 +51,17 @@ public class NettyClient {
 							ChannelPipeline pipeline = arg0.pipeline();
 							//ObjectDecoder的基类半包解码器LengthFieldBasedFrameDecoder的报文格式保持兼容。因为底层的父类LengthFieldBasedFrameDecoder
 							//的初始化参数即为super(maxObjectSize, 0, 4, 0, 4);
-							pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, NettyClient.MESSAGE_LENGTH, 0, NettyClient.MESSAGE_LENGTH));
+//							pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
 							//利用LengthFieldPrepender回填补充ObjectDecoder消息报文头
-							pipeline.addLast(new LengthFieldPrepender(NettyClient.MESSAGE_LENGTH));
-							pipeline.addLast(new ObjectEncoder());
+//							pipeline.addLast(new LengthFieldPrepender(4));
+//							pipeline.addLast(new ObjectEncoder());
 							//考虑到并发性能，采用weakCachingConcurrentResolver缓存策略。一般情况使用:cacheDisabled即可
-							pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+//							pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+							//注册Netty编码器
+							System.out.println("11111111:"+serializeType.getSerializeType());
+							pipeline.addLast(new NettyEncoderHandler(serializeType));
+							//注册Netty解码器
+							pipeline.addLast(new NettyDecoderHandler(RpcResponse.class, serializeType));
 							pipeline.addLast("handler", new NettyClientHandler());
 
 						}

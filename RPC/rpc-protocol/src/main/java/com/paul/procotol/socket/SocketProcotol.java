@@ -1,6 +1,6 @@
 package com.paul.procotol.socket;
 
-import com.paul.framework.Procotol;
+import com.paul.procotol.Procotol;
 import com.paul.framework.RpcRequest;
 import com.paul.framework.URL;
 

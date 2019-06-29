@@ -18,7 +18,7 @@ public class ParaelTest {
 		CountDownLatch finish = new CountDownLatch(parallel);
 
 		for (int index = 0; index < parallel; index++) {
-			CalcParallelRequestThread client = new CalcParallelRequestThread(signal, finish, index);
+			CalcParallelRequestThread client = new CalcParallelRequestThread(signal, finish, index,applicationContext);
 			new Thread(client).start();
 		}
 

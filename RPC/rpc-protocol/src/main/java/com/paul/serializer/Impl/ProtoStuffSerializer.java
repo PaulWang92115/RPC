@@ -1,13 +1,17 @@
-package com.paul.serializer;
+package com.paul.serializer.Impl;
 
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtobufIOUtil;
 import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
+import com.paul.serializer.Serializer;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisBase;
 import org.objenesis.ObjenesisStd;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,5 +53,28 @@ public class ProtoStuffSerializer implements Serializer {
         Schema<T> schema = getSchema(clazz);
         ProtobufIOUtil.mergeFrom(data, message, schema);
         return message;
+    }
+
+    public static void main(String[] args) {
+        User u = new User();
+        u.setEmail("liyebing@163.com");
+        u.setName("kongxuan");
+
+        User u1 = new User();
+        u1.setEmail("liyebing@162.com");
+        u1.setName("kongxuan11");
+
+        List<User> userList = new ArrayList<User>();
+        Map<String, User> userMap = new HashMap<String, User>();
+        userList.add(u1);
+        userMap.put("a", u1);
+
+        u.setUserList(userList);
+        u.setUserMap(userMap);
+
+
+        byte[] userByte = new ProtoStuffSerializer().serialize(u);
+        User user = new ProtoStuffSerializer().deserialize(userByte, User.class);
+        System.out.println(user.getEmail() + " : " + user.getName() + " : " + new String(new JSONSerializer().serialize(u.getUserList())) + " : " + new String(new JSONSerializer().serialize(u.getUserMap())));
     }
 }

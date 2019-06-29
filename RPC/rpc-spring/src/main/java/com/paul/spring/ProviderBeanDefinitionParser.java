@@ -1,5 +1,6 @@
 package com.paul.spring;
 
+import com.paul.framework.Configuration;
 import com.paul.framework.URL;
 import com.paul.register.Register;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -28,16 +29,16 @@ public class ProviderBeanDefinitionParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
-        BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanClass.getName());
+//        BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
+//        BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanClass.getName());
         String interfaces = element.getAttribute("interf");
         String impl = element.getAttribute("impl");
-        int port = Integer.parseInt(beanDefinition.getPropertyValues().get("port").toString());
+        int port = Configuration.getInstance().getPort();
         InetAddress addr = null;
         try {
             addr = InetAddress.getLocalHost();
             String ip = addr.getHostAddress();
-            if(port == 0){
+            if(port == 0) {
                 port = 32115;
             }
             URL url = new URL(ip,port);
@@ -45,6 +46,6 @@ public class ProviderBeanDefinitionParser implements BeanDefinitionParser {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        return beanDefinition;
+        return null;
     }
 }

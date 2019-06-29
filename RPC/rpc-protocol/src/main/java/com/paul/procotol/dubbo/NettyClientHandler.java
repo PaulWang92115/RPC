@@ -10,24 +10,11 @@ import com.paul.procotol.dubbo.channelpool.ResponseHolder;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 
-public class NettyClientHandler extends ChannelInboundHandlerAdapter{
+public class NettyClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
 
     private ChannelHandlerContext context;
-
-    @Override
-    public synchronized void channelRead(ChannelHandlerContext ctx, Object msg)
-            throws Exception {
-        // String res = (String)msg;
-        RpcResponse rpcResponse = (RpcResponse)msg;
-        String responseId = rpcResponse.getResponseId();
-        MessageCallBack callBack = ResponseHolder.getInstance().mapCallBack.get(responseId);
-        if(callBack != null){
-            ResponseHolder.getInstance().mapCallBack.remove(responseId);
-            callBack.over(rpcResponse);
-        }
-
-    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
@@ -49,5 +36,15 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter{
     }
 
 
-
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcResponse rpcResponse) throws Exception {
+        // String res = (String)msg;
+        //RpcResponse rpcResponse = (RpcResponse)msg;
+        String responseId = rpcResponse.getResponseId();
+        MessageCallBack callBack = ResponseHolder.getInstance().mapCallBack.get(responseId);
+        if(callBack != null){
+            ResponseHolder.getInstance().mapCallBack.remove(responseId);
+            callBack.over(rpcResponse);
+        }
+    }
 }

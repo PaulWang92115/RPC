@@ -1,5 +1,6 @@
 package com.paul.spring;
 
+import com.paul.framework.Configuration;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -24,7 +25,7 @@ public class ServiceBeanDefinitionParser implements BeanDefinitionParser {
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
 
-        System.out.println("5");
+
 
         String interfaces = element.getAttribute("interfaces");
         String ref = element.getAttribute("ref");
@@ -44,7 +45,10 @@ public class ServiceBeanDefinitionParser implements BeanDefinitionParser {
 
         BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
         beanDefinitionRegistry.registerBeanDefinition(ref,definition);
-        NettyChannelPoolFactory.getInstance().initNettyChannelPoolFactory();
+        String procotol = Configuration.getInstance().getProcotol();
+        if("Dubbo".equalsIgnoreCase(procotol)) {
+            NettyChannelPoolFactory.getInstance().initNettyChannelPoolFactory();
+        }
         return definition;
     }
 }

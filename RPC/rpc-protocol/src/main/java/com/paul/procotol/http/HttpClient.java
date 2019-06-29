@@ -1,12 +1,11 @@
 package com.paul.procotol.http;
 
 import com.paul.framework.RpcRequest;
+import com.paul.framework.RpcResponse;
 import org.apache.commons.io.IOUtils;
+import org.objenesis.Objenesis;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,7 +36,8 @@ public class HttpClient {
             oos.close();
 
             InputStream inputStream = httpURLConnection.getInputStream();
-            return IOUtils.toString(inputStream);
+            RpcResponse rpcResponse =  (RpcResponse)toObject(IOUtils.toByteArray(inputStream));
+            return rpcResponse.getData();
 
 
         } catch (MalformedURLException e) {
@@ -47,5 +47,21 @@ public class HttpClient {
         }
         return null;
 
+    }
+
+    public Object toObject (byte[] bytes) {
+        Object obj = null;
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            ObjectInputStream ois = new ObjectInputStream (bis);
+            obj = ois.readObject();
+            ois.close();
+            bis.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return obj;
     }
 }

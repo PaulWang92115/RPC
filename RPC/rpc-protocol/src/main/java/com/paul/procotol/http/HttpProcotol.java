@@ -1,7 +1,7 @@
 package com.paul.procotol.http;
 
 import com.paul.framework.RpcRequest;
-import com.paul.framework.Procotol;
+import com.paul.procotol.Procotol;
 import com.paul.framework.URL;
 
 public class HttpProcotol implements Procotol {
@@ -12,8 +12,8 @@ public class HttpProcotol implements Procotol {
     }
 
     @Override
-    public String send(URL url, RpcRequest invocation) {
+    public Object send(URL url, RpcRequest invocation) {
         HttpClient httpClient = HttpClient.getInstance();
-        return (String)httpClient.post(url.getHost(),url.getPort(),invocation);
+        return httpClient.post(url.getHost(),url.getPort(),invocation);
     }
 }

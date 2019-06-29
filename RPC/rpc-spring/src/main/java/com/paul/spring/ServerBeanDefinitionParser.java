@@ -1,20 +1,18 @@
 package com.paul.spring;
 
-import com.paul.framework.Procotol;
+import com.paul.framework.Configuration;
+import com.paul.procotol.Procotol;
 import com.paul.framework.URL;
 import com.paul.procotol.dubbo.DubboProcotol;
 import com.paul.procotol.http.HttpProcotol;
 import com.paul.procotol.socket.SocketProcotol;
-import com.paul.register.Register;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class ServerBeanDefinitionParser implements BeanDefinitionParser {
 
@@ -30,11 +28,11 @@ public class ServerBeanDefinitionParser implements BeanDefinitionParser {
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         System.out.println("4");
-        BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
-        BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanClass.getName());
-        beanDefinition.getPropertyValues().add("role",element.getAttribute("role"));
-        String pro = (String)beanDefinition.getPropertyValues().get("procotol");
-        int port = Integer.parseInt(beanDefinition.getPropertyValues().get("port").toString());
+//        BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
+//        BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanClass.getName());
+//        beanDefinition.getPropertyValues().add("role",element.getAttribute("role"));
+        String pro = Configuration.getInstance().getProcotol();
+        int port = Configuration.getInstance().getPort();
         Procotol procotol = null;
         if("provider".equalsIgnoreCase(element.getAttribute("role"))){
             if("Dubbo".equalsIgnoreCase(pro)){
@@ -62,6 +60,6 @@ public class ServerBeanDefinitionParser implements BeanDefinitionParser {
             }
         }
 
-        return beanDefinition;
+        return null;
     }
 }

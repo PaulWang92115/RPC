@@ -1,6 +1,7 @@
 package com.paul.procotol.http;
 
 import com.paul.framework.RpcRequest;
+import com.paul.framework.RpcResponse;
 import com.paul.framework.URL;
 import com.paul.register.Register;
 import org.apache.commons.io.IOUtils;
@@ -27,9 +28,12 @@ public class HttpServletHandler{
 
 
             Method method = impClass.getMethod(invocation.getMethodName(),invocation.getParamTypes());
-            String result = (String)method.invoke(impClass.newInstance(),invocation.getParams());
+            Object result = method.invoke(impClass.newInstance(),invocation.getParams());
 
-            IOUtils.write(result,outputStream);
+            RpcResponse rpcResponse = new RpcResponse();
+            rpcResponse.setResponseId(invocation.getRequestId());
+            rpcResponse.setData(result);
+            IOUtils.write(toByteArray(rpcResponse),outputStream);
         }catch (IOException e){
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -43,6 +47,22 @@ public class HttpServletHandler{
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
+    }
+
+    public byte[] toByteArray (Object obj) {
+        byte[] bytes = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(obj);
+            oos.flush();
+            bytes = bos.toByteArray ();
+            oos.close();
+            bos.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return bytes;
     }
 
 }

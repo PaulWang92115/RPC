@@ -1,6 +1,7 @@
 package com.paul.service;
 
 import com.paul.spring.ProxyFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -11,24 +12,17 @@ public class CalcParallelRequestThread implements Runnable{
 	private CountDownLatch finish;
 	
 	private int taskNumber = 0;
-	ProxyFactory proxyFactory = new ProxyFactory(HelloService.class);
 
-	HelloService helloService;
+	private ApplicationContext applicationContext;
 
-	{
-		try {
-			helloService = (HelloService) proxyFactory.getObject();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public CalcParallelRequestThread(CountDownLatch singal,
-			CountDownLatch finish, int taskNumber) {
+			CountDownLatch finish, int taskNumber,ApplicationContext applicationContext) {
 		super();
 		this.singal = singal;
 		this.finish = finish;
 		this.taskNumber = taskNumber;
+		this.applicationContext = applicationContext;
 	}
 
 
@@ -37,6 +31,7 @@ public class CalcParallelRequestThread implements Runnable{
 	public void run() {
 		try {
 			singal.await();
+			HelloService helloService = (HelloService) applicationContext.getBean(HelloService.class);
 	        int result = helloService.cal(taskNumber,taskNumber);
 	        System.out.println("result is:" + result);
 	        finish.countDown();

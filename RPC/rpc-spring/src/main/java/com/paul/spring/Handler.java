@@ -1,22 +1,21 @@
 package com.paul.spring;
 
-import com.paul.framework.Procotol;
+import com.paul.framework.Configuration;
+import com.paul.procotol.Procotol;
 import com.paul.framework.RpcRequest;
 import com.paul.framework.URL;
 import com.paul.procotol.dubbo.DubboProcotol;
 import com.paul.procotol.http.HttpProcotol;
 import com.paul.procotol.socket.SocketProcotol;
 import com.paul.register.Register;
+import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.UUID;
 
 
 public class Handler<T> implements InvocationHandler{
-
 
     private Class<T> interfaceClass;
 
@@ -26,7 +25,6 @@ public class Handler<T> implements InvocationHandler{
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
         Configuration configuration = Configuration.getInstance();
 
         Procotol procotol;
@@ -48,7 +46,6 @@ public class Handler<T> implements InvocationHandler{
         Object res = procotol.send(url, invocation);
         return res;
     }
-
 
 
 }

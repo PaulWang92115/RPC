@@ -1,7 +1,10 @@
 package com.paul.spring;
 
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Proxy;
 
@@ -9,6 +12,8 @@ public class ProxyFactory<T> implements FactoryBean<T> {
 
 
     private Class<T> interfaceClass;
+
+    private ApplicationContext ctx;
 
 
     public ProxyFactory(Class<T> interfaceClass) {

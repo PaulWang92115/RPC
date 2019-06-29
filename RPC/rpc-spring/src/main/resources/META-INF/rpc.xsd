@@ -13,6 +13,12 @@
                 <xsd:documentation><![CDATA[ The elementname1 age. ]]></xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
+        <xsd:attribute name="serialize" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ The elementname1 age. ]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+
     </xsd:complexType>
 
     <xsd:element name="procotol" type="procotol-type">

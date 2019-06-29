@@ -1,5 +1,6 @@
 package com.paul.spring;
 
+import com.paul.framework.Configuration;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 public class RpcNamespaceHandler extends NamespaceHandlerSupport {

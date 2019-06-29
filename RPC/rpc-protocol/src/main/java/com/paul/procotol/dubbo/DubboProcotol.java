@@ -1,5 +1,6 @@
 package com.paul.procotol.dubbo;
 
+import com.paul.serializer.SerializeType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
@@ -8,12 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import com.paul.framework.MessageCallBack;
 import com.paul.framework.RpcRequest;
-import com.paul.framework.Procotol;
+import com.paul.procotol.Procotol;
 import com.paul.framework.URL;
 import com.paul.procotol.dubbo.channelpool.NettyChannelPoolFactory;
 import com.paul.procotol.dubbo.channelpool.ResponseHolder;
-import com.paul.procotol.http.HttpClient;
-import com.paul.procotol.http.HttpServer;
 
 public class DubboProcotol implements Procotol {
     @Override
