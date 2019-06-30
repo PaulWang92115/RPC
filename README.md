@@ -35,3 +35,35 @@ In development:
 ### 结构图
 ![avatar](https://github.com/PaulWang92115/RPC/blob/PAUL_RELEASE_1906/doc/20190630164543928.png)
 
+### 性能表现
+首先说明，性能表现测试根据不同的机器和不同的网络环境可能会有所不同，下面的测试结果是基于我自己的机器的。
+我的电脑最多起 2000 个并发线程，多了就 OOM 了，在公司的电脑尝试过起 10000 个并发线程，没有任何问题，下面看 2000 个并发线程的表现。
+测试类：
+```java
+	public static void main(String[] args) throws Exception {
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("rpc.xml");
+		//并行度10000
+		int parallel = 2000;
+
+		//开始计时
+		long a1 = System.currentTimeMillis();
+
+		CountDownLatch signal = new CountDownLatch(1);
+		CountDownLatch finish = new CountDownLatch(parallel);
+
+		for (int index = 0; index < parallel; index++) {
+			CalcParallelRequestThread client = new CalcParallelRequestThread(signal, finish, index,applicationContext);
+			new Thread(client).start();
+		}
+
+		//n个并发线程瞬间发起请求操作
+		signal.countDown();
+		finish.await();
+
+		long a2 = System.currentTimeMillis();
+
+		String tip = String.format("RPC调用总共耗时: [%s] 毫秒", a2 - a1);
+		System.out.println(tip);
+
+	}
+```
