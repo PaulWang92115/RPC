@@ -10,14 +10,13 @@
 3. 基于 Spring 开发，接口代理类自动注入到客户端，使用 @Autowired 注入即可，用户无需关注底层实现。
 4. 支持 Spring xml 格式配置，通过 xml 完成代理类注入，服务端启动，通信协议选择。
 5. 服务端使用线程池提高并发能力。
+6. 客户端使用 channel 缓存提高并发能力。
+7. 支持多序列化协议，多负载均衡协议选择。
 
 开发中：
-1. 加入 Zookeeper，redis 注册中心，以及对应的负载均衡以及容错机制。
-2. 增加对象序列化机制，目前只有原生的序列化机制。
-3. netty 并发优化。
-4. 多线程模型优化。
-5. 监控模块。
-6. 客户端连接关闭。
+1. 加入 redis 注册中心，以及对应的服务治理容错机制。
+2. 监控模块。
+3. Spring 启动逻辑优化。
 
 ### RPC introduction
 1. RPC is written in Java, and network communication depends on netty, http, socket.
@@ -25,13 +24,13 @@
 3. Based on Spring development, the interface proxy class is automatically injected into the client, using @Autowired injection, users do not need to pay attention to the underlying implementation.
 4. Support Spring xml format configuration, complete proxy class injection through xml, server startup, communication protocol selection.
 5. Server-side thread pool improves concurrency.
+6. The client uses the channel cache to improve concurrency.
+7. Support multi-serialization protocol, multi-load balancing protocol selection.
 
 In development:
-1. Add Zookeeper, redis registry, and corresponding load balancing and fault tolerance mechanisms.
-2. Increasing the object serialization mechanism, currently only the native serialization mechanism.
-3.netty concurrency optimization.
-4. Multi-threaded model optimization.
-5. Registration module
+1. Add the redis registry and the corresponding service governance fault tolerance mechanism.
+2. Monitoring module.
+3. Spring starts logic optimization.
 
 ### 结构图
 ![avatar](https://github.com/PaulWang92115/RPC/blob/master/doc/RPC%20(1).png)
