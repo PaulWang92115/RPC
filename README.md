@@ -33,5 +33,5 @@ In development:
 3. Spring starts logic optimization.
 
 ### 结构图
-![avatar](https://github.com/PaulWang92115/RPC/blob/master/doc/RPC%20(1).png)
+![avatar](https://github.com/PaulWang92115/RPC/blob/PAUL_RELEASE_1906/doc/20190630164543928.png)
 
