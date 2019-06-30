@@ -67,3 +67,5 @@ In development:
 
 	}
 ```
+![avatar](https://github.com/PaulWang92115/RPC/blob/PAUL_RELEASE_1906/doc/countdown.png)
+2000 并发 1秒多，还是比较快的。
