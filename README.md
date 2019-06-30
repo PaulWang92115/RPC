@@ -71,4 +71,13 @@ In development:
 2000 并发 1秒多，还是比较快的。
 
 ### 模块介绍
+![avatar](https://github.com/PaulWang92115/RPC/blob/PAUL_RELEASE_1906/doc/modules.png)
+1. rpc-consumer,rpc-provider 是我们的测试模块，服务提供者和服务消费者。
+2. rpc-register 注册中心，里面目前只有 zookeeper 实现。
+3. rpc-procotol 网络协议模块，包括协议，序列化方式，负载均衡。
+4. rpc-framework 一些通用的类。
+5. rpc-spring 与 Spring 结合的核心模块，不论是客户端还是只需要导入这个包就可以了。
 
+
+
+3. 
