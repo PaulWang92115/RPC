@@ -15,7 +15,6 @@
         <module>rpc-protocol</module>
         <module>rpc-framework</module>
         <module>rpc-spring</module>
-        <module>rpc-spring-consumer</module>
     </modules>
 
 
