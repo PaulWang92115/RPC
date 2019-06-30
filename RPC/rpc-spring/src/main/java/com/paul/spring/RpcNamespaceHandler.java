@@ -10,7 +10,7 @@ public class RpcNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("register", new RegisterBeanDefinitionParser(Configuration.class));
         registerBeanDefinitionParser("application", new ApplicationBeanDefinitionParser(Configuration.class));
         registerBeanDefinitionParser("provider", new ProviderBeanDefinitionParser(Configuration.class));
-        registerBeanDefinitionParser("role", new ServerBeanDefinitionParser(Configuration.class));
-        registerBeanDefinitionParser("service", new ServiceBeanDefinitionParser(Service.class));
+ //       registerBeanDefinitionParser("role", new ServerBeanDefinitionParser(Configuration.class));
+        registerBeanDefinitionParser("service", new ServiceBeanDefinitionParser(Configuration.class));
     }
 }

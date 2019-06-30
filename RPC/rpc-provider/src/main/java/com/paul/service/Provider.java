@@ -1,6 +1,7 @@
 package com.paul.service;
 
 
+import com.paul.framework.Configuration;
 import com.paul.procotol.socket.SocketProcotol;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -33,6 +34,7 @@ public class Provider implements ApplicationContextAware{
 //		Procotol procotol1 = new DubboProcotol();
 //		procotol1.start(url);
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("rpc.xml");
+		System.out.println(Configuration.getInstance().getAddress());
 	}
 
 	@Override

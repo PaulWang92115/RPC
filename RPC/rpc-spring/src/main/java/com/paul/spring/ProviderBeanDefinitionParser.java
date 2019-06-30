@@ -34,12 +34,10 @@ public class ProviderBeanDefinitionParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-//        BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
-//        BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanClass.getName());
-//        String applicationName = Configuration.getInstance().getName();
+        System.out.println("15");
         String interfaces = element.getAttribute("interf");
-        System.out.println("1111:"+interfaces);
         String impl = element.getAttribute("impl");
+
         int port = Configuration.getInstance().getPort();
         InetAddress addr = null;
         try {
@@ -48,8 +46,6 @@ public class ProviderBeanDefinitionParser implements BeanDefinitionParser {
             if(port == 0) {
                 port = 32115;
             }
-            URL url = new URL(ip,port);
-//            Register.regist(url,interfaces,impl);
             List<ServiceProvider> providerList = new ArrayList<>();
             ServiceProvider providerService = new ServiceProvider();
             providerService.setProvider(Class.forName(interfaces));

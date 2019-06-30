@@ -16,6 +16,7 @@ import org.w3c.dom.Element;
 
 import com.paul.procotol.dubbo.channelpool.NettyChannelPoolFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,25 +54,19 @@ public class ServiceBeanDefinitionParser implements BeanDefinitionParser {
 
         BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
         beanDefinitionRegistry.registerBeanDefinition(ref,definition);
-        String procotol = Configuration.getInstance().getProcotol();
-        if("Dubbo".equalsIgnoreCase(procotol)) {
-            //获取服务注册中心
-            ZookeeperRegisterCenter registerCenter4Consumer = ZookeeperRegisterCenter.getInstance();
-            //初始化服务提供者列表到本地缓存
-           registerCenter4Consumer.initProviderMap();
-            //初始化Netty Channel
-            Map<String, List<ServiceProvider>> providerMap = registerCenter4Consumer.getServiceMetaDataMap4Consumer();
-            if (MapUtils.isEmpty(providerMap)) {
-                throw new RuntimeException("service provider list is empty.");
-            }
-            NettyChannelPoolFactory.getInstance().initNettyChannelPoolFactory(providerMap);
-            //将消费者信息注册到注册中心
-            ServiceConsumer invoker = new ServiceConsumer();
-            invoker.setConsumer(clazz);
-            invoker.setServiceObject(interfaces);
-            invoker.setGroupName("");
-            registerCenter4Consumer.registerConsumer(invoker);
-        }
+
+        //获取服务注册中心
+        ZookeeperRegisterCenter registerCenter4Consumer = ZookeeperRegisterCenter.getInstance();
+
+        //将消费者信息注册到注册中心
+        ServiceConsumer invoker = new ServiceConsumer();
+        List<ServiceConsumer> consumers = new ArrayList<>();
+        consumers.add(invoker);
+        invoker.setConsumer(clazz);
+        invoker.setServiceObject(interfaces);
+        invoker.setGroupName("");
+        registerCenter4Consumer.registerConsumer(consumers);
+
         return definition;
     }
 }

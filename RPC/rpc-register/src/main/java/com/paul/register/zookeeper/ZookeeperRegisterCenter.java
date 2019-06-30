@@ -65,8 +65,8 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
     }
 
     @Override
-    public void registerConsumer(ServiceConsumer consumer) {
-        if(consumer == null){
+    public void registerConsumer(List<ServiceConsumer> consumers) {
+        if(consumers == null || consumers.size() == 0){
             return;
         }
 
@@ -86,29 +86,34 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
                 zkClient.createPersistent(ROOT_PATH);
             }
 
-            //创建服务消费者节点
-            String serviceNode = consumer.getConsumer().getName();
-            String servicePath = ROOT_PATH  + CONSUMER_TYPE+ "/" + serviceNode;
+            for(int i = 0; i< consumers.size();i++) {
+                ServiceConsumer consumer = consumers.get(i);
+                //创建服务消费者节点
+                String serviceNode = consumer.getConsumer().getName();
+                String servicePath = ROOT_PATH + CONSUMER_TYPE + "/" + serviceNode;
 
-            exist = zkClient.exists(servicePath);
-            System.out.println("exist:"+exist);
-            System.out.println("servicePath:"+servicePath);
-            if(!exist){
-                zkClient.createPersistent(servicePath,true);
-            }
+                exist = zkClient.exists(servicePath);
+                System.out.println("exist:" + exist);
+                System.out.println("servicePath:" + servicePath);
+                if (!exist) {
+                    zkClient.createPersistent(servicePath, true);
+                }
 
-            //创建当前服务器节点
-            InetAddress addr = null;
-            try {
-                addr = InetAddress.getLocalHost();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-            String ip = addr.getHostAddress();
-            String currentServiceIpNode = servicePath + "/" + ip;
-            exist = zkClient.exists(currentServiceIpNode);
-            if(!exist){
-                zkClient.createEphemeral(currentServiceIpNode);
+                //创建当前服务器节点
+                InetAddress addr = null;
+                try {
+                    addr = InetAddress.getLocalHost();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                String ip = addr.getHostAddress();
+                String currentServiceIpNode = servicePath + "/" + ip;
+                exist = zkClient.exists(currentServiceIpNode);
+                if (!exist) {
+                    zkClient.createEphemeral(currentServiceIpNode);
+                }
+
+
             }
 
 

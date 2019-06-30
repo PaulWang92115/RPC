@@ -22,9 +22,5 @@ public class ApplicationBeanDefinitionParser implements BeanDefinitionParser {
         System.out.println("2");
         Configuration.getInstance().setName(element.getAttribute("name"));
         return null;
-//        BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
-//        BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanClass.getName());
-//        beanDefinition.getPropertyValues().add("name",element.getAttribute("name"));
-//        return beanDefinition;
     }
 }

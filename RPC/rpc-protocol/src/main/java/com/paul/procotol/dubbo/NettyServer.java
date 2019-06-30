@@ -10,11 +10,7 @@ import com.paul.serializer.NettyDecoderHandler;
 import com.paul.serializer.NettyEncoderHandler;
 import com.paul.serializer.SerializeType;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -82,17 +78,12 @@ public class NettyServer {
 				}
 				
 			});
-			ChannelFuture future = bootstrap.bind(host, port).sync();
+			Channel channel = bootstrap.bind(host, port).sync().channel();
 			System.out.println("Server start listen at " + port);
-			future.channel().closeFuture().sync();
 		}catch(Exception e){
 			bossGroup.shutdownGracefully();
 			workerGroup.shutdownGracefully();
-		}finally {
-			bossGroup.shutdownGracefully();
-			workerGroup.shutdownGracefully();
 		}
-		
 	}
 	
 

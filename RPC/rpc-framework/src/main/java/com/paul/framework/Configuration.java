@@ -1,5 +1,7 @@
 package com.paul.framework;
 
+import java.util.List;
+
 public class Configuration {
 
 
@@ -11,6 +13,9 @@ public class Configuration {
     private String serialize;
     private String address;
     private String stragety;
+    private List<ServiceProvider> providerList;
+    private List<ServiceConsumer> consumerList;
+
 
     private static Configuration configuration = new Configuration();
 
@@ -74,5 +79,21 @@ public class Configuration {
 
     public void setStragety(String stragety) {
         this.stragety = stragety;
+    }
+
+    public List<ServiceProvider> getProviderList() {
+        return providerList;
+    }
+
+    public void setProviderList(List<ServiceProvider> providerList) {
+        this.providerList = providerList;
+    }
+
+    public List<ServiceConsumer> getConsumerList() {
+        return consumerList;
+    }
+
+    public void setConsumerList(List<ServiceConsumer> consumerList) {
+        this.consumerList = consumerList;
     }
 }
