@@ -170,7 +170,8 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
                     e.printStackTrace();
                 }
                 String ip = addr.getHostAddress();
-                String serviceIpNode = servicePath +"/" + ip + "|" + serverPort;
+                String impl = (String)entry.getValue().get(0).getServiceObject();
+                String serviceIpNode = servicePath +"/" + ip + "|" + serverPort + "|" + impl;
                 System.out.println("serviceIpNode:" + serviceIpNode);
                 exist = zkClient.exists(serviceIpNode);
                 if(!exist){
@@ -285,11 +286,9 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
             List<String> ipPathList = zkClient.getChildren(servicePath);
             System.out.println("ipPathList:"+ipPathList.toString());
             for (String ipPath : ipPathList) {
-                System.out.println("444:"+ipPath);
                 String serverIp = ipPath.split("\\|")[0];
                 String serverPort = ipPath.split("\\|")[1];
-                System.out.println("555:"+serverIp);
-                System.out.println("666:"+serverPort);
+                String impl = ipPath.split("\\|")[2];
                 List<ServiceProvider> providerServiceList = providerServiceMap.get(serviceName);
                 if (providerServiceList == null) {
                     providerServiceList = new ArrayList<>();
@@ -305,6 +304,7 @@ public class ZookeeperRegisterCenter implements RegisterCenter4Provider, Registe
 
                 providerService.setIp(serverIp);
                 providerService.setPort(Integer.parseInt(serverPort));
+                providerService.setServiceObject(impl);
                 providerService.setGroupName("");
                 providerServiceList.add(providerService);
 

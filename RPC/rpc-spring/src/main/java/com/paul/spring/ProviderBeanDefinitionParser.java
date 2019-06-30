@@ -36,7 +36,7 @@ public class ProviderBeanDefinitionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
 //        BeanDefinitionRegistry beanDefinitionRegistry = parserContext.getRegistry();
 //        BeanDefinition beanDefinition = beanDefinitionRegistry.getBeanDefinition(beanClass.getName());
-        String applicationName = Configuration.getInstance().getName();
+//        String applicationName = Configuration.getInstance().getName();
         String interfaces = element.getAttribute("interf");
         System.out.println("1111:"+interfaces);
         String impl = element.getAttribute("impl");
@@ -58,7 +58,7 @@ public class ProviderBeanDefinitionParser implements BeanDefinitionParser {
             providerService.setPort(port);
             providerService.setTimeout(5000);
             providerService.setServiceMethod(null);
-            providerService.setApplicationName(applicationName);
+            providerService.setApplicationName("");
             providerService.setGroupName("nettyrpc");
             providerList.add(providerService);
 

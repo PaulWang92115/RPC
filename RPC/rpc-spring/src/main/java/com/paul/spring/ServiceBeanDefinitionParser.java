@@ -64,9 +64,6 @@ public class ServiceBeanDefinitionParser implements BeanDefinitionParser {
             if (MapUtils.isEmpty(providerMap)) {
                 throw new RuntimeException("service provider list is empty.");
             }
-            System.out.println("12312321:"+providerMap.toString());
-            System.out.println(providerMap.get("com.paul.service.HelloService"));
-            System.out.println(providerMap.get("com.paul.service.UserService"));
             NettyChannelPoolFactory.getInstance().initNettyChannelPoolFactory(providerMap);
             //将消费者信息注册到注册中心
             ServiceConsumer invoker = new ServiceConsumer();

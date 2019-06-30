@@ -10,6 +10,7 @@ public class Configuration {
     private String role;
     private String serialize;
     private String address;
+    private String stragety;
 
     private static Configuration configuration = new Configuration();
 
@@ -65,5 +66,13 @@ public class Configuration {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getStragety() {
+        return stragety;
+    }
+
+    public void setStragety(String stragety) {
+        this.stragety = stragety;
     }
 }

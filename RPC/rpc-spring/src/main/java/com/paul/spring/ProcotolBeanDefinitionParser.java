@@ -23,6 +23,7 @@ public class ProcotolBeanDefinitionParser implements BeanDefinitionParser {
         Configuration.getInstance().setProcotol(element.getAttribute("procotol"));
         Configuration.getInstance().setPort(Integer.parseInt(element.getAttribute("port")));
         Configuration.getInstance().setSerialize(element.getAttribute("serialize"));
+        Configuration.getInstance().setStragety(element.getAttribute("stragety"));
 /**        RootBeanDefinition beanDefinition = new RootBeanDefinition();
         beanDefinition.setBeanClass(beanClass);
         beanDefinition.setLazyInit(false);
