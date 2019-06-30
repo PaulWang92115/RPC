@@ -78,6 +78,33 @@ In development:
 4. rpc-framework 一些通用的类。
 5. rpc-spring 与 Spring 结合的核心模块，不论是客户端还是只需要导入这个包就可以了。
 
-
-
-3. 
+### 快速开始
+1. 不论是客户端还是服务端都需要导入 rpc-spring jar 包。
+2. 在使用的 spring 的配置文件里加入针对 rpc 的配置。
+3. 客户端配置，注意 rpc:procotol 必须比 rpc:service 先配置，rpc:procotol 里面的 role 不配置就代表客户端。
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rpc="http://paul.com/schema" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://paul.com/schema http://paul.com/schema/rpc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <rpc:procotol procotol="Dubbo" port="3230" serialize="ProtoStuff" address="47.107.56.23:2181"/>
+    <rpc:application name="rpc-client" />
+    <rpc:service interfaces="com.paul.service.HelloService" ref="helloService" timeout="5000"/>
+</beans>
+```
+4. 服务端配置, rpc:procotol 必须比 rpc:provider 先配置，role="provider" 代表是服务端。
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rpc="http://paul.com/schema" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://paul.com/schema http://paul.com/schema/rpc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <rpc:procotol procotol="Dubbo" port="3230" serialize="ProtoStuff" role="provider" address="47.107.56.23:2181"/>
+    <rpc:application name="rpc-server" />
+    <rpc:provider interf="com.paul.service.HelloService" impl="com.paul.service.HelloServiceImpl" />
+    <rpc:provider interf="com.paul.service.UserService" impl="com.paul.service.UserServiceImpl" />
+</beans>
+```
