@@ -22,7 +22,7 @@ public class ParaelTest {
 			new Thread(client).start();
 		}
 
-		//10000个并发线程瞬间发起请求操作
+		//n个并发线程瞬间发起请求操作
 		signal.countDown();
 		finish.await();
 
